@@ -1,6 +1,6 @@
 ---
 name: specify
-description: Take a single feature (typically a roadmap item) through three gated phases — Specify, Plan, Tasks — and stop before implementation. Produces three reviewable artifacts (spec.md, plan.md, tasks.md) under specs/<feature-slug>/. Uses AskUserQuestion to surface assumptions and clarify scope, data model, dependencies, trust gates, and failure modes before any draft is written. Each phase waits for explicit human approval before advancing. Use when the user says "specify X", "spec out X", "plan this roadmap item", "/specify", or otherwise signals they want a feature scoped and decomposed before coding starts. Implementation is a separate skill.
+description: Take a single feature (typically a roadmap item) through three gated phases — Specify, Plan, Tasks — and stop before implementation. Produces three reviewable artifacts (spec.md, plan.md, tasks.md) in a per-feature subdirectory under specs/. Uses AskUserQuestion to surface assumptions and clarify scope, data model, dependencies, trust gates, and failure modes before any draft is written. Each phase waits for explicit human approval before advancing. Use when the user says "specify X", "spec out X", "plan this roadmap item", "/specify", or otherwise signals they want a feature scoped and decomposed before coding starts. Implementation is a separate skill.
 tools: Bash, Read, Edit, Write, AskUserQuestion
 ---
 

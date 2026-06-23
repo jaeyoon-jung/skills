@@ -49,8 +49,9 @@ Derive a kebab-case `<feature-slug>` from the item (e.g., `gmail-onboarding-inge
 - `README.md` — repo layout
 - Existing `specs/<feature-slug>/` if present (skill may be re-run mid-flow)
 - The directory and files most relevant to the feature
+- The existing test suite — locate test files, infer framework, file layout, naming conventions, granularity (unit / integration / e2e), and the kinds of seams the project actually tests vs. skips
 
-Skim, don't deep-dive. The goal is to know enough to ask sharp questions.
+Skim, don't deep-dive. The goal is to know enough to ask sharp questions and to propose tests by analogy to what's already there.
 
 ---
 
@@ -84,7 +85,19 @@ REFRAMED SUCCESS CRITERIA:
 → Are these the right targets?
 ```
 
-### 2c. Ask clarifying questions iteratively — use AskUserQuestion
+### 2c. Propose a testing plan grounded in existing patterns
+
+By default, this skill **proposes new tests** for the feature, modeled on what's already in the suite. The `Testing strategy` section in `spec.md` is a contract — it must list concrete tests to add, or explicitly justify "no new tests" with a project-specific reason. Vague restatements of project conventions are not acceptable.
+
+Before drafting, write out and surface to the user:
+
+- **Existing patterns observed.** Framework + locations (e.g., `Vitest in tests/`, `Playwright in e2e/`), naming, granularity philosophy ("integration over unit", "load-bearing seams only", "no a11y tests", "smoke only at e2e level").
+- **Proposed tests for this feature, by analogy.** Each entry includes: file path (in the project's naming style), level (unit / integration / e2e / a11y), and what it asserts. Examples of what often warrants a test: each new server action or query, each new data invariant, each user-visible flow end-to-end, each non-obvious failure path.
+- **What's deliberately not covered.** Any pattern present elsewhere in the suite that you're choosing to skip for this feature — and why.
+
+Ask the user to accept, modify, or reject the proposal. A reject must come with a recorded reason ("This is throwaway scaffolding"; "Project policy: M-stage code is test-free"); silent decline is not allowed. The accepted plan becomes the `Testing strategy` section verbatim.
+
+### 2d. Ask clarifying questions iteratively — use AskUserQuestion
 
 Loop until you have sufficient context. Ask 2–4 questions per round (the tool's max); multi-select where options aren't exclusive. **Don't draft a spec until each of these categories has a concrete answer:**
 
@@ -99,7 +112,7 @@ Loop until you have sufficient context. Ask 2–4 questions per round (the tool'
 
 After each round, re-evaluate the gaps. If anything is still abstract or assumed, ask another round. Generic answers ("standard approach," "the usual") aren't sufficient — push for specifics.
 
-### 2d. Write `specs/<feature-slug>/spec.md`
+### 2e. Write `specs/<feature-slug>/spec.md`
 
 Feature-level specs reference project-level docs (`constitution.md`, `tech-stack.md`, `CLAUDE.md`) instead of duplicating them. Sections that don't apply should say "No changes from project baseline — see [doc]" rather than be removed.
 
@@ -132,7 +145,7 @@ Schema migrations, new tables / columns, backfill plan. "None" is a valid answer
 New packages, APIs, third-party services, OAuth scopes. "None" is a valid answer.
 
 ## Testing strategy
-What new tests, at what level (unit / integration / e2e). Reference the project's testing conventions instead of restating them.
+List the specific new tests this feature adds. For each: **file path** (in the project's naming style), **level** (unit / integration / e2e / a11y), and **what it asserts**. Modeled on the project's existing patterns. If no new tests are warranted, state the **project-specific reason** explicitly ("M-stage policy is test-free"; "covered by existing X integration test"). "Reference existing conventions" alone is not sufficient — be concrete or be specifically justified.
 
 ## Boundaries
 - Always: <…>
@@ -146,7 +159,7 @@ Testable conditions for "done." Each one verifiable by command, test, or manual 
 Anything still unresolved. **If non-empty, the spec is not ready to advance.**
 ````
 
-### 2e. Gate
+### 2f. Gate
 
 Show the file to the user. **Wait for explicit approval before advancing.** If `Open questions` is non-empty, resolve them before moving on.
 
@@ -227,4 +240,5 @@ After each phase, show the file. Ask whether to commit. The spec belongs in vers
 - Include estimates, dates, owners, or velocity numbers — those belong in issues / task trackers.
 - Duplicate project-level info (stack, commands, structure, code style) already in `constitution.md` / `tech-stack.md` / `CLAUDE.md`. Reference instead.
 - Leave `Open questions` non-empty when advancing past Specify.
+- Leave `Testing strategy` as a vague reference to project conventions — either enumerate concrete tests (file + level + assertion) or record a specific reason for adding none.
 - Auto-commit, push, or merge.

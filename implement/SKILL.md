@@ -146,6 +146,7 @@ Do not bundle multiple slices into one commit. Do not amend prior commits. Do no
 After all slices in the task are committed, verify the task as a whole:
 
 - All acceptance criteria from `tasks.md` met
+- Any tests declared in `spec.md`'s `Testing strategy` for this task have been added at the declared file path and pass (the spec's testing plan is a contract — `/specify` enforces it on input, `/implement` enforces it on output)
 - Full project verification: tests, typecheck, lint, build (whatever the project's gate command is — usually documented in `README.md` / `CLAUDE.md`)
 - Manual smoke for UI changes (state plainly if you can't run the UI yourself)
 
@@ -200,3 +201,4 @@ If the feature spans many slices and the user wants to merge incrementally witho
 - Auto-push, force-push, open PRs, or merge. Stop at commits; route to `/ship` for PRs.
 - Skip the per-task pause unless the user explicitly opted into multi-task mode.
 - Leave the codebase broken between slices — every commit must keep the project compilable and the existing test suite passing.
+- Check off a task when `spec.md`'s `Testing strategy` declared tests for it and those tests don't exist or don't pass. The spec is a contract; if the test plan changed, edit the spec first.

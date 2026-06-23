@@ -5,6 +5,7 @@ A collection of useful skills for [Claude Code](https://claude.com/claude-code).
 ## Skills
 
 - **[changelog](changelog/SKILL.md)** — Maintain `CHANGELOG.md` with date-grouped flat bullets.
+- **[project-charter](project-charter/SKILL.md)** — Draft or update `constitution.md` (≤1000 words) and `tech-stack.md` with iterative clarifying questions.
 - **[ship](ship/SKILL.md)** — Commit current working changes and open a GitHub PR.
 - **[triage](triage/SKILL.md)** — File GitHub issues for unresolved code review findings.
 
@@ -14,11 +15,12 @@ Symlink (or copy) any skill directory into `~/.claude/skills/`:
 
 ```sh
 ln -s "$PWD/changelog" ~/.claude/skills/changelog
+ln -s "$PWD/project-charter" ~/.claude/skills/project-charter
 ln -s "$PWD/ship" ~/.claude/skills/ship
 ln -s "$PWD/triage" ~/.claude/skills/triage
 ```
 
-Then invoke with `/changelog`, `/ship`, or `/triage` in Claude Code.
+Then invoke with `/changelog`, `/project-charter`, `/ship`, or `/triage` in Claude Code.
 
 ## Keep skills version-controlled
 

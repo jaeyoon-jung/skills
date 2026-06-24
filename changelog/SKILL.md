@@ -1,10 +1,9 @@
 ---
 name: changelog
-description: Maintain CHANGELOG.md in the project root with date-grouped flat bullets. Two modes — backfill from git history if no changelog exists, otherwise append entries under today's date for work done since the last update. Use when the user says "update the changelog", "add to the changelog", "regenerate the changelog", "/changelog", or otherwise signals they want the CHANGELOG.md refreshed (typically right before merging a branch).
-tools: Bash, Read, Edit, Write
+description: Maintain CHANGELOG.md in the project root with date-grouped flat bullets. Backfill from git history when no changelog exists; otherwise append entries under today's date for work done since the last update. Use when the user asks to update, add to, regenerate, or refresh the changelog, typically before merging a branch.
 ---
 
-# /changelog — maintain CHANGELOG.md
+# Maintain CHANGELOG.md
 
 User-invoked, runs right before a merge. Decide which mode you're in by checking whether `CHANGELOG.md` exists at the repo root, then do the smallest correct write.
 

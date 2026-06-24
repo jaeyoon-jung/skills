@@ -1,10 +1,9 @@
 ---
 name: project-charter
-description: Draft or update a project's foundational docs — constitution.md (≤1000 words of high-level principles, target user, jobs-to-be-done) and tech-stack.md (the stack with non-obvious rationale). Reads repo context plus any external documents the user shares, then asks clarifying questions iteratively until requirements are concrete before writing. Use when the user says "write the constitution", "update constitution.md", "write our tech stack", "draft a project charter", "/project-charter", or otherwise signals they want either of these foundational docs written or refreshed.
-tools: Bash, Read, Edit, Write
+description: Draft or update a project's foundational docs — constitution.md (≤1000 words of high-level principles, target user, and jobs-to-be-done) and tech-stack.md (the stack with non-obvious rationale). Read repo context and external documents, then clarify requirements iteratively before writing. Use when the user asks to write or refresh a constitution, technology stack, or project charter.
 ---
 
-# /project-charter — draft constitution.md and tech-stack.md
+# Draft constitution.md and tech-stack.md
 
 Bootstrap or refresh a project's foundational documents that ground all future work. The two files this skill writes:
 
@@ -31,7 +30,7 @@ For each file that already exists, ask whether to refresh in place or rewrite.
 ## 2. Read repo context (parallel, before any questions)
 
 - `README.md`
-- `CLAUDE.md` (if present)
+- `AGENTS.md` and `CLAUDE.md` (if present)
 - `package.json` / `pyproject.toml` / `Cargo.toml` / equivalent
 - Existing `constitution.md` / `tech-stack.md` if present
 - `git log --oneline -20` for recent direction
@@ -49,7 +48,7 @@ If the user shares anything, read all of it before continuing. External docs oft
 
 ## 4. Ask clarifying questions — iteratively, until sufficient
 
-**Do not draft from gaps.** Keep asking until each required area below has a specific, concrete answer. Ask in batches of 2–4 using `AskUserQuestion` for multiple-choice; ask in plain text when the question is open-ended.
+**Do not draft from gaps.** Keep asking until each required area below has a specific, concrete answer. Ask in batches of 2–4 and wait for the response. Use the host's interactive input tool when one is available; ask directly in plain text otherwise.
 
 After each round, re-evaluate the gaps. If anything in the required areas below is still abstract or generic, ask another round. Generic answers ("standard best practices", "the usual things") are not sufficient — push for specifics.
 
@@ -85,9 +84,9 @@ If they redirect, iterate on structure before drafting.
 
 ## 6. Draft
 
-Write the file with `Write`.
+Write the file using the host's available file-editing tools.
 
-- **Voice:** absorb tone from `README.md` and `CLAUDE.md`. Don't impose a generic charter style.
+- **Voice:** absorb tone from `README.md`, `AGENTS.md`, and `CLAUDE.md` when present. Don't impose a generic charter style.
 - **Specificity:** every principle or claim must ground in a concrete artifact — file path, convention, real past incident. "Code should be readable" fails; "Run the four CI gates before declaring done; `build` catches production-only errors `typecheck` misses" passes.
 - **JTBD framing:** use the user's language for problems. Don't translate verbal JTBD statements into feature-speak. If the user said *"We want to be a trusted advisor,"* keep that phrasing.
 - **No fluff sections.** No "Mission," "Vision," "Values" headers unless the user asks. Lead with substance.
@@ -100,13 +99,13 @@ After writing `constitution.md`:
 wc -w <root>/constitution.md
 ```
 
-**If over 1000 words, cut.** The cap is hard. If you can't fit, you've likely enumerated rules instead of stating principles. A principle generalizes; a rule applies once. Move rules into `CLAUDE.md` and keep principles in `constitution.md`.
+**If over 1000 words, cut.** The cap is hard. If you can't fit, you've likely enumerated rules instead of stating principles. A principle generalizes; a rule applies once. Move host-specific operating rules into `AGENTS.md` or `CLAUDE.md` and keep principles in `constitution.md`.
 
 `tech-stack.md` has no hard cap, but treat it as a reference card — usually one screen.
 
 ## 8. Don't auto-commit
 
-Show the user the file(s) written and the word count for `constitution.md`. Ask whether to commit. Offer to keep `README.md` / `CLAUDE.md` in sync if the new docs contradict or extend them.
+Show the user the file(s) written and the word count for `constitution.md`. Ask whether to commit. Offer to keep `README.md`, `AGENTS.md`, and `CLAUDE.md` in sync if the new docs contradict or extend them.
 
 ---
 

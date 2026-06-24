@@ -1,12 +1,11 @@
 ---
 name: implement
-description: Execute remaining tasks in a per-feature tasks.md (produced by /specify) one at a time, in thin vertical slices. Resumes from where prior work left off by reading checkbox state and cross-referencing CHANGELOG.md and recent commits. Loads minimal spec context per task instead of flooding the agent with the whole spec. Each slice runs implement → verify → commit, leaves the system green, and touches one logical thing. Refuses scope expansion ("while I'm here"), multi-purpose commits, and skipping verification. Pauses for human review at the end of each task by default. Pairs with /specify, which produces spec.md, plan.md, and tasks.md. Use when the user says "implement X", "build the spec'd feature", "work through the tasks", "/implement", or otherwise wants execution against an approved tasks.md.
-tools: Bash, Read, Edit, Write, AskUserQuestion
+description: Execute remaining tasks in a per-feature tasks.md one at a time in thin, verified vertical slices. Resume from checkbox state, CHANGELOG.md, and recent commits; load minimal specification context per task; and implement, verify, and commit one logical change at a time. Use when the user asks to implement a specified feature, build from an approved tasks.md, or work through remaining feature tasks.
 ---
 
-# /implement — Execute tasks.md in thin vertical slices
+# Execute tasks.md in thin vertical slices
 
-Pairs with `/specify`. Reads the approved `spec.md` / `plan.md` / `tasks.md` for a single feature, executes remaining tasks one at a time, and stops at the end of the task list (or whenever a checkpoint demands human input).
+Pair with the `specify` skill. Read the approved `spec.md`, `plan.md`, and `tasks.md` for a single feature, execute remaining tasks one at a time, and stop at the end of the task list or whenever a checkpoint demands human input.
 
 **The whole point: refuse the failure mode of "implement everything, test at the end."** Each slice leaves the system green and committed. A bug in slice 1 doesn't ripple into slices 2–5.
 
@@ -30,7 +29,7 @@ Run in parallel:
 
 If you are not in a git repo, stop and tell the user this skill needs one.
 
-If `specs/` doesn't exist or has no feature directories with a `tasks.md`, stop and tell the user to run `/specify` first.
+If `specs/` doesn't exist or has no feature directories with a `tasks.md`, stop and tell the user to use the `specify` skill first.
 
 Identify the feature:
 
@@ -38,7 +37,7 @@ Identify the feature:
 - If multiple candidates exist with remaining tasks, list them and ask.
 - If exactly one has remaining tasks, use it.
 
-For the chosen feature, confirm all three artifacts exist: `spec.md`, `plan.md`, `tasks.md`. If `tasks.md` is missing, stop and redirect to `/specify`.
+For the chosen feature, confirm all three artifacts exist: `spec.md`, `plan.md`, `tasks.md`. If `tasks.md` is missing, stop and redirect to the `specify` skill.
 
 ## 2. Resume — figure out where to start
 
@@ -127,7 +126,7 @@ Typical sequence (skip any that don't apply):
 If verification fails:
 
 - Fix the root cause; don't loosen the check, mock around it, or `--no-verify` past it.
-- If the failure suggests a spec gap or an ambiguity, stop and surface it via `AskUserQuestion` rather than choosing silently.
+- If the failure suggests a spec gap or ambiguity, ask the user a concise question and wait for the response rather than choosing silently. Use the host's interactive input tool when one is available.
 
 #### Commit
 
@@ -146,8 +145,8 @@ Do not bundle multiple slices into one commit. Do not amend prior commits. Do no
 After all slices in the task are committed, verify the task as a whole:
 
 - All acceptance criteria from `tasks.md` met
-- Any tests declared in `spec.md`'s `Testing strategy` for this task have been added at the declared file path and pass (the spec's testing plan is a contract — `/specify` enforces it on input, `/implement` enforces it on output)
-- Full project verification: tests, typecheck, lint, build (whatever the project's gate command is — usually documented in `README.md` / `CLAUDE.md`)
+- Any tests declared in `spec.md`'s `Testing strategy` for this task have been added at the declared file path and pass (the spec's testing plan is a contract — `specify` enforces it on input and `implement` enforces it on output)
+- Full project verification: tests, typecheck, lint, build (whatever the project's gate command is — usually documented in `README.md`, `AGENTS.md`, or `CLAUDE.md`)
 - Manual smoke for UI changes (state plainly if you can't run the UI yourself)
 
 Then flip the checkbox in `tasks.md` to `- [x]` and commit that change separately (one-line commit: `Mark task N done — <title>`).
@@ -175,8 +174,8 @@ When `tasks.md` has no remaining `- [ ]` items:
 
 - Run the full project gate (`lint && typecheck && test && build`, or whatever the project documents).
 - Summarize what shipped vs. what's still open in any other spec.
-- **Do not** open a PR, push, or merge. Direct the user to `/ship` or their PR workflow.
-- Invoke `/changelog` to add entries for what just shipped (skip only if the project has no `CHANGELOG.md` and no convention of keeping one).
+- **Do not** open a PR, push, or merge. Direct the user to the `ship` skill or their PR workflow.
+- Load and follow the `changelog` skill to add entries for what just shipped. Prefer the host's native skill invocation; otherwise read the sibling `../changelog/SKILL.md`. Skip only if the project has no `CHANGELOG.md` and no convention of keeping one.
 - If `ROADMAP.md` exists at the repo root, find the item this feature corresponds to (cross-reference `spec.md`'s goal/summary against the roadmap's goals and bullets), propose flipping it to `- [x]`, and on confirmation make the edit and commit it separately (one-line commit: `Mark roadmap item done — <short name>`). If the match is ambiguous or multiple items could apply, surface the candidates and ask — don't guess, and don't check off items that weren't actually delivered by this feature.
 
 ---
@@ -199,7 +198,7 @@ If the feature spans many slices and the user wants to merge incrementally witho
 - Re-run an unchanged verification command as reassurance.
 - Loosen a failing check (mock the bug away, `--no-verify`, delete a failing test) without explicit human direction.
 - Silently choose between architectural alternatives when the spec didn't decide — surface the ambiguity and ask.
-- Auto-push, force-push, open PRs, or merge. Stop at commits; route to `/ship` for PRs.
+- Auto-push, force-push, open PRs, or merge. Stop at commits; route to the `ship` skill for PRs.
 - Skip the per-task pause unless the user explicitly opted into multi-task mode.
 - Leave the codebase broken between slices — every commit must keep the project compilable and the existing test suite passing.
 - Check off a task when `spec.md`'s `Testing strategy` declared tests for it and those tests don't exist or don't pass. The spec is a contract; if the test plan changed, edit the spec first.

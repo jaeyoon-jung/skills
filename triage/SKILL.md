@@ -1,18 +1,17 @@
 ---
 name: triage
-description: After a code review, file GitHub issues for each non-resolved finding with severity labels. Use when the user says "triage", "file the rest", "track the rest as issues", "file tech debt", or otherwise wants to convert unresolved review findings into trackable issues. Pairs with the built-in /review skill.
-tools: Bash, Read
+description: After a code review, file GitHub issues for each unresolved finding with severity labels. Use when the user says "triage", "file the rest", "track the rest as issues", "file tech debt", or otherwise wants to convert unresolved review findings into trackable issues.
 ---
 
-# /triage — file issues for unresolved review findings
+# File issues for unresolved review findings
 
-Companion to `/review`. Reads the most recent code-review comment on a PR, walks each non-resolved finding, files a GitHub issue with a severity + category label, and returns a tight summary table.
+Companion to a code-review workflow. Read the relevant code-review comment on a PR, walk each unresolved finding, file a GitHub issue with a severity and category label, and return a tight summary table.
 
 ## 1. Find the PR + review
 
 - If a PR URL/number is given as an argument, use it.
 - Otherwise resolve the current branch's PR: `gh pr list --head $(git rev-parse --abbrev-ref HEAD) --json number,url`. Stop with a clear error if there is no PR.
-- Fetch review comments: `gh pr view <num> --comments` or `gh api repos/<owner>/<repo>/issues/<num>/comments`. The most recent author-by-Claude review is usually the target. If multiple, ask the user.
+- Fetch review comments: `gh pr view <num> --comments` or `gh api repos/<owner>/<repo>/issues/<num>/comments`. Select the review the user identified; otherwise choose the most recent substantive code review. If multiple reviews are plausible, ask the user and wait for the response.
 
 ## 2. Identify non-resolved items
 

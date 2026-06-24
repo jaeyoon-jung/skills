@@ -1,10 +1,9 @@
 ---
 name: specify
-description: Take a single feature (typically a roadmap item) through three gated phases — Specify, Plan, Tasks — and stop before implementation. Produces three reviewable artifacts (spec.md, plan.md, tasks.md) in a per-feature subdirectory under specs/. Uses AskUserQuestion to surface assumptions and clarify scope, data model, dependencies, trust gates, and failure modes before any draft is written. Each phase waits for explicit human approval before advancing. Use when the user says "specify X", "spec out X", "plan this roadmap item", "/specify", or otherwise signals they want a feature scoped and decomposed before coding starts. Implementation is a separate skill.
-tools: Bash, Read, Edit, Write, AskUserQuestion
+description: Take a single feature, typically a roadmap item, through three gated phases — Specify, Plan, Tasks — and stop before implementation. Produce reviewable spec.md, plan.md, and tasks.md artifacts under specs/, surface assumptions, and clarify scope, data model, dependencies, trust gates, and failure modes before drafting. Use when the user asks to specify, scope, plan, or decompose a feature before coding starts.
 ---
 
-# /specify — Specify → Plan → Tasks (stops before Implement)
+# Specify → Plan → Tasks
 
 Take a single feature through three human-gated phases. Output is three reviewable files under `specs/<feature-slug>/`, one per phase. **This skill stops at `tasks.md`.** Execution is a separate skill.
 
@@ -29,7 +28,7 @@ Run in parallel:
 - `git rev-parse --show-toplevel` — anchor every path off this
 - `ls <root>/ROADMAP.md` — does a roadmap exist?
 - `ls <root>/specs/` — does a specs directory exist? (follow whatever naming convention is already there)
-- `ls <root>/constitution.md <root>/tech-stack.md <root>/CLAUDE.md <root>/AGENTS.md` — what foundational docs ground decisions?
+- `ls <root>/constitution.md <root>/tech-stack.md <root>/AGENTS.md <root>/CLAUDE.md` — what foundational docs ground decisions?
 
 If you are not in a git repo, stop and tell the user this skill needs one.
 
@@ -45,7 +44,7 @@ Derive a kebab-case `<feature-slug>` from the item (e.g., `gmail-onboarding-inge
 - The roadmap item + its parent Goal + the Goal's "Why"
 - `constitution.md` — JTBDs and load-bearing principles
 - `tech-stack.md` — the stack and any non-obvious rationale
-- `CLAUDE.md` / `AGENTS.md` — load-bearing conventions, anti-patterns, gotchas
+- `AGENTS.md` / `CLAUDE.md` — load-bearing conventions, anti-patterns, gotchas
 - `README.md` — repo layout
 - Existing `specs/<feature-slug>/` if present (skill may be re-run mid-flow)
 - The directory and files most relevant to the feature
@@ -97,9 +96,9 @@ Before drafting, write out and surface to the user:
 
 Ask the user to accept, modify, or reject the proposal. A reject must come with a recorded reason ("This is throwaway scaffolding"; "Project policy: M-stage code is test-free"); silent decline is not allowed. The accepted plan becomes the `Testing strategy` section verbatim.
 
-### 2d. Ask clarifying questions iteratively — use AskUserQuestion
+### 2d. Ask clarifying questions iteratively
 
-Loop until you have sufficient context. Ask 2–4 questions per round (the tool's max); multi-select where options aren't exclusive. **Don't draft a spec until each of these categories has a concrete answer:**
+Loop until you have sufficient context. Ask 2–4 concise questions per round and wait for the response. Use the host's interactive input tool when one is available; allow multiple selections where options aren't exclusive. **Don't draft a spec until each of these categories has a concrete answer:**
 
 | Category | Why it must be answered before drafting |
 |---|---|
@@ -114,7 +113,7 @@ After each round, re-evaluate the gaps. If anything is still abstract or assumed
 
 ### 2e. Write `specs/<feature-slug>/spec.md`
 
-Feature-level specs reference project-level docs (`constitution.md`, `tech-stack.md`, `CLAUDE.md`) instead of duplicating them. Sections that don't apply should say "No changes from project baseline — see [doc]" rather than be removed.
+Feature-level specs reference project-level docs (`constitution.md`, `tech-stack.md`, `AGENTS.md`, `CLAUDE.md`) instead of duplicating them. Sections that don't apply should say "No changes from project baseline — see [doc]" rather than be removed.
 
 Template:
 
@@ -136,7 +135,7 @@ Out of scope: <…>
 Key UX decisions, flows, edge cases, empty/error states.
 
 ## Technical approach
-Where the code lives, key abstractions, deviations from project baseline (CLAUDE.md / tech-stack.md). If no deviation, say so.
+Where the code lives, key abstractions, deviations from project baseline (`AGENTS.md`, `CLAUDE.md`, or `tech-stack.md`). If no deviation, say so.
 
 ## Data model changes
 Schema migrations, new tables / columns, backfill plan. "None" is a valid answer — state it explicitly.
@@ -235,10 +234,10 @@ After each phase, show the file. Ask whether to commit. The spec belongs in vers
 - Execute, implement, or write feature code. This skill stops at `tasks.md`.
 - Advance from one phase to the next without explicit human approval.
 - Draft a spec while critical-category questions (scope, data model, dependencies, trust gates, failure modes) are unanswered.
-- Skip `AskUserQuestion` when concrete ambiguity remains — the tool is the surface for clarifying.
+- Skip asking the user when concrete ambiguity remains; use the host's interactive input tool when available, otherwise ask directly and wait.
 - Silently fill in ambiguous requirements. Surface assumptions; ask.
 - Include estimates, dates, owners, or velocity numbers — those belong in issues / task trackers.
-- Duplicate project-level info (stack, commands, structure, code style) already in `constitution.md` / `tech-stack.md` / `CLAUDE.md`. Reference instead.
+- Duplicate project-level info (stack, commands, structure, code style) already in `constitution.md`, `tech-stack.md`, `AGENTS.md`, or `CLAUDE.md`. Reference instead.
 - Leave `Open questions` non-empty when advancing past Specify.
 - Leave `Testing strategy` as a vague reference to project conventions — either enumerate concrete tests (file + level + assertion) or record a specific reason for adding none.
 - Auto-commit, push, or merge.

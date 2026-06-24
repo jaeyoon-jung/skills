@@ -1,10 +1,9 @@
 ---
 name: roadmap
-description: Draft or maintain ROADMAP.md — a forward-looking plan of goals, each with a one-sentence "Why" and a checklist of feature-sized items. If a roadmap already exists, first walk recent commits to check off shipped items, then iterate on additions/edits. Asks for the user's initial thoughts before drafting, clarifies iteratively, pushes back on goals that are too big or items already shipped, and enriches from repo context (deferred lists, JTBDs, missing coverage). Use when the user says "write the roadmap", "update the roadmap", "/roadmap", or otherwise signals they want forward planning captured.
-tools: Bash, Read, Edit, Write, AskUserQuestion
+description: Draft or maintain ROADMAP.md as a forward-looking plan of goals, each with a one-sentence "Why" and a checklist of feature-sized items. Refresh shipped-item status from recent commits before editing, clarify the user's ideas iteratively, and enrich them from repository context. Use when the user asks to write, update, or otherwise capture a product or engineering roadmap.
 ---
 
-# /roadmap — draft and maintain ROADMAP.md
+# Draft and maintain ROADMAP.md
 
 A roadmap is a forward-looking plan, not a backlog. Each goal is a coherent project; each checklist item is a feature-sized chunk that can be broken into focused, single-session tasks when picked up. The roadmap is the seam between "what shipped" (`CHANGELOG.md`) and "what we're doing today" (issues / tasks).
 
@@ -27,7 +26,7 @@ Default location is `<root>/ROADMAP.md`, peer to `README.md` / `CHANGELOG.md` / 
 ## 2. Read repo context (parallel, before any questions)
 
 - `README.md`
-- `CLAUDE.md` / `AGENTS.md` (if present)
+- `AGENTS.md` / `CLAUDE.md` (if present)
 - `CHANGELOG.md` (what's already shipped)
 - `constitution.md` (if present — grounds the *why* / JTBDs)
 - Existing `ROADMAP.md` if present
@@ -67,10 +66,10 @@ Before writing anything, run each user-proposed goal/feature through these failu
 
 ## 6. Enrich from the codebase
 
-The user will under-spec. Read the deferred list, constitution JTBDs, and CLAUDE.md gotchas to identify gaps the user didn't raise but the project needs:
+The user will under-spec. Read the deferred list, constitution JTBDs, and applicable `AGENTS.md` or `CLAUDE.md` gotchas to identify gaps the user didn't raise but the project needs:
 
 - **Production cutovers.** Anything the constitution or README flags as "before production" (auth swap, storage swap, RLS, monitoring) deserves its own goal if real users are coming.
-- **Coverage gaps.** List domains the product touches that aren't in the user's goals (e.g., budget, guest list, calendar export, mobile pass). Ask which deserve goals via `AskUserQuestion` (multiSelect).
+- **Coverage gaps.** List domains the product touches that aren't in the user's goals (e.g., budget, guest list, calendar export, mobile pass). Ask which deserve goals and wait for the response. Use the host's interactive input tool with multiple selection when one is available.
 - **Async / activity surface.** If any goal does background work (ingest, scheduled refresh, vendor email, transcripts), the user needs a way to see what happened. Add an activity-feed or review-queue item under the relevant goal.
 
 Don't invent goals out of thin air — every enrichment should point to a concrete signal in the repo.
@@ -111,7 +110,7 @@ Rules:
 
 ## 8. Don't auto-commit
 
-Show the user the final file (and the status-refresh diff from §3 if applicable). Ask whether to commit. If new goals contradict or extend `README.md` / `CLAUDE.md` / `constitution.md`, offer to keep them in sync in the same change.
+Show the user the final file (and the status-refresh diff from §3 if applicable). Ask whether to commit. If new goals contradict or extend `README.md`, `AGENTS.md`, `CLAUDE.md`, or `constitution.md`, offer to keep them in sync in the same change.
 
 ---
 

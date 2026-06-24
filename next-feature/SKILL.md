@@ -1,12 +1,12 @@
 ---
 name: next-feature
-description: Pick the next unchecked item from ROADMAP.md and run it end-to-end through the pipeline — /specify → /implement → /ship → /changelog — on a fresh feature branch. Confirms the picked item with the user, cuts the branch, then delegates to each child skill in order; respects each child's gates (per-phase approval in /specify, per-task pause in /implement). Stops once the PR is open and the changelog entry has been pushed. Use when the user says "next feature", "do the next thing on the roadmap", "/next-feature", or otherwise wants to crank the full pipeline on one roadmap item.
+description: Pick the next unchecked item from ROADMAP.md and run it end-to-end through the pipeline — /specify → /implement → /ship — on a fresh feature branch. Confirms the picked item with the user, cuts the branch, then delegates to each child skill in order; respects each child's gates (per-phase approval in /specify, per-task pause in /implement). The changelog entry is written inside /implement before /ship opens the PR. Stops once the PR is open. Use when the user says "next feature", "do the next thing on the roadmap", "/next-feature", or otherwise wants to crank the full pipeline on one roadmap item.
 tools: Bash, Read, AskUserQuestion
 ---
 
 # /next-feature — pick the next roadmap item and run it through the full pipeline
 
-Orchestrator. Picks the next unchecked feature from `ROADMAP.md`, cuts a feature branch, and walks the chain: `/specify` → `/implement` → `/ship` → `/changelog`. Each child skill keeps its own gates — this skill doesn't bypass them, it just sequences them.
+Orchestrator. Picks the next unchecked feature from `ROADMAP.md`, cuts a feature branch, and walks the chain: `/specify` → `/implement` → `/ship`. Each child skill keeps its own gates — this skill doesn't bypass them, it just sequences them. `/implement` invokes `/changelog` itself at end-of-feature, so the changelog entry is part of the PR `/ship` opens.
 
 ```
 ROADMAP.md
@@ -15,10 +15,10 @@ ROADMAP.md
 pick next [ ] item
    │
    ▼
-cut branch ──→ /specify ──→ /implement ──→ /ship ──→ /changelog ──→ stop (PR ready for review)
+cut branch ──→ /specify ──→ /implement ──→ /ship ──→ stop (PR ready for review)
 ```
 
-The skill ends with an open PR and a changelog entry pushed to its branch. Merging, code review, and post-merge roadmap refresh are out of scope.
+The skill ends with an open PR — including the changelog entry written during `/implement`. Merging, code review, and post-merge roadmap refresh are out of scope.
 
 ---
 
@@ -81,26 +81,20 @@ When `/implement` reports all tasks done (and the full project gate passes), adv
 
 ## 6. Run `/ship`
 
-Invoke the `ship` skill. It commits anything still uncommitted (there shouldn't be much after `/implement`) and opens a GitHub PR from `feature/<slug>` into the default branch.
+Invoke the `ship` skill. It commits anything still uncommitted (there shouldn't be much after `/implement`, which also wrote the changelog entry) and opens a GitHub PR from `feature/<slug>` into the default branch.
 
 Capture the PR URL — needed for the closeout report.
 
-## 7. Run `/changelog`
-
-Invoke the `changelog` skill. It writes a new entry under today's date for the work just shipped. The entry lands as a new commit on the same branch; push it so the open PR updates.
-
-Confirm with the user whether to push directly to the PR branch — pushing is a remote action, so don't do it silently.
-
-## 8. Stop — closeout
+## 7. Stop — closeout
 
 Report:
 
 - PR URL
 - Branch name
 - Tasks completed (count + summary from `tasks.md`)
-- Changelog entry that landed
+- Changelog entry that landed (written during `/implement`)
 - Any `Open questions` / notes the user should follow up on
-- Reminder: `ROADMAP.md` checkbox isn't flipped yet — run `/roadmap` to refresh once the PR merges (or fold the refresh into the merge workflow)
+- Reminder: if `/implement` flipped the `ROADMAP.md` checkbox, it's already committed on this branch — the change lands when the PR merges. If it didn't, run `/roadmap` to refresh once the PR merges.
 
 **Skill ends here.** Don't merge, don't request review assignments, don't trigger CI re-runs.
 
@@ -113,7 +107,7 @@ The skill is restartable from any step:
 - Branch already exists for the slug → ask whether to resume on it or pick a new item.
 - `specs/<feature-slug>/` already exists → `/specify` will pick up mid-phase; let it.
 - `tasks.md` has done items → `/implement` resumes from the first unchecked task.
-- PR already open for the branch → skip `/ship`; jump to `/changelog`.
+- PR already open for the branch → skip `/ship`; go straight to closeout.
 
 State the resume detection plainly before kicking off the next child skill.
 

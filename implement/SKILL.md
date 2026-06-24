@@ -176,7 +176,7 @@ When `tasks.md` has no remaining `- [ ]` items:
 - Run the full project gate (`lint && typecheck && test && build`, or whatever the project documents).
 - Summarize what shipped vs. what's still open in any other spec.
 - **Do not** open a PR, push, or merge. Direct the user to `/ship` or their PR workflow.
-- Offer to update `CHANGELOG.md` (or run `/changelog`) if entries are missing for what just shipped.
+- Invoke `/changelog` to add entries for what just shipped (skip only if the project has no `CHANGELOG.md` and no convention of keeping one).
 - If `ROADMAP.md` exists at the repo root, find the item this feature corresponds to (cross-reference `spec.md`'s goal/summary against the roadmap's goals and bullets), propose flipping it to `- [x]`, and on confirmation make the edit and commit it separately (one-line commit: `Mark roadmap item done — <short name>`). If the match is ambiguous or multiple items could apply, surface the candidates and ask — don't guess, and don't check off items that weren't actually delivered by this feature.
 
 ---

@@ -29,7 +29,7 @@ Run in parallel:
 - `git status --porcelain` — must be empty (no uncommitted changes)
 - `git rev-parse --abbrev-ref HEAD` — should be `main` (or the project's default branch)
 - `ls <root>/ROADMAP.md`
-- `ls <root>/constitution.md <root>/tech-stack.md` — the `specify` skill grounds against these; warn if missing
+- `ls <root>/AGENTS.md <root>/CLAUDE.md <root>/constitution.md <root>/tech-stack.md` — the `specify` skill grounds against the agent guide first; warn if no agent guide exists and the fallback docs are also missing
 
 Stop if:
 
@@ -37,6 +37,8 @@ Stop if:
 - Working tree is dirty — ask the user to commit or stash first. This skill assumes a clean slate.
 - Not on the default branch — ask whether to switch or to use the current branch as the base.
 - `ROADMAP.md` doesn't exist — direct the user to the `roadmap` skill.
+
+Warn, but don't stop, if no `AGENTS.md` / `CLAUDE.md` exists and fallback `constitution.md` / `tech-stack.md` docs are also missing; context discovery may be heavier and less reliable.
 
 ## 2. Pick the next item
 
@@ -68,7 +70,13 @@ Load and follow the `specify` skill with the chosen roadmap item as input. Prefe
 
 The `specify` skill has its own three-phase gates (Specify → Plan → Tasks); don't bypass them. If the user redirects mid-spec (re-scopes, splits, abandons), surface back to the user before continuing — the pipeline may need to restart from step 2 with a different item.
 
-If `specify` ends successfully, `specs/<feature-slug>/spec.md`, `plan.md`, and `tasks.md` exist. Confirm before advancing.
+If `specify` ends successfully, `specs/<feature-slug>/spec.md`, `plan.md`, and `tasks.md` exist. Confirm before advancing. Also confirm `tasks.md` is the implementation contract: each remaining task has `Refs`, `Acceptance`, `Tests`, `Verify`, and `Files` lines so `implement` can run from tasks without re-reading the full spec and plan.
+
+Also confirm:
+
+- `spec.md` includes a completed `Spec checklist`, with every item checked before implementation.
+- `tasks.md` includes a `Task generation report` with total tasks, parallel candidates, test tasks, MVP slice, and context budget check.
+- `specs/.current` points to `specs/<feature-slug>` with `phase=tasks`.
 
 ## 5. Run the implement skill
 

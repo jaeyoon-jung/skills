@@ -1,6 +1,6 @@
 ---
 name: specify
-description: Take a single feature, typically a roadmap item, through three gated phases — Specify, Plan, Tasks — and stop before implementation. Produce reviewable spec.md, plan.md, and tasks.md artifacts under specs/, surface assumptions, and clarify scope, data model, dependencies, trust gates, and failure modes before drafting. Use when the user asks to specify, scope, plan, or decompose a feature before coding starts.
+description: Take a single feature, typically a roadmap item, through three gated phases — Specify, Plan, Tasks — and stop before implementation. Produce reviewable spec.md, plan.md, and tasks.md artifacts under specs/, repair them with spec-repair before each phase handoff, surface assumptions, and clarify scope, data model, dependencies, trust gates, and failure modes before drafting. Use when the user asks to specify, scope, plan, or decompose a feature before coding starts.
 ---
 
 # Specify → Plan → Tasks
@@ -235,6 +235,8 @@ Before showing the file, run a **spec quality gate**:
 - [ ] No duplicated headings, pasted fragments, dangling code, or contradictions.
 - [ ] Any exact file paths identify ownership / seams rather than acting as the implementation task list.
 
+Load and follow the `spec-repair` skill for the Spec phase. Apply safe repairs before showing the file. If `spec-repair` reports `Needs decision`, show those questions and do not advance.
+
 Show the file to the user. **Wait for explicit approval before advancing.** If `Open questions` is non-empty, resolve them before moving on.
 
 ---
@@ -255,6 +257,8 @@ The plan should link to spec sections instead of copying their contents. For exa
 The plan must be reviewable: the human reads it and says "yes, that's the approach" or "no, change X." If they redirect, iterate on the plan before continuing.
 
 ### Gate
+
+Load and follow the `spec-repair` skill for the Plan phase. Apply safe repairs before showing the file. If `spec-repair` reports `Needs decision`, show those questions and do not advance.
 
 Show the plan to the user. **Wait for explicit approval before advancing.**
 
@@ -308,6 +312,8 @@ No estimates, no dates, no owners.
 
 ### Gate (final)
 
+Load and follow the `spec-repair` skill for the Task phase before final handoff. Apply safe repairs before showing the file. If `spec-repair` reports `Needs decision`, show those questions and do not hand off to implementation.
+
 Show the tasks to the user. **This is where the skill ends.** Before stopping, confirm:
 
 - [ ] `spec.md` covers scope, data model, dependencies, success criteria, trust gates
@@ -355,4 +361,5 @@ After each phase, show the file. Ask whether to commit. The spec belongs in vers
 - Produce `tasks.md` without test obligations and section refs for each task.
 - Produce `tasks.md` without a task generation report.
 - Leave `specs/.current` pointing at a different feature after this skill completes.
+- Advance between phases after `spec-repair` reports unresolved `Needs decision` items.
 - Auto-commit, push, or merge.

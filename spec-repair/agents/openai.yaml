@@ -1,0 +1,4 @@
+interface:
+  display_name: "Spec Repair"
+  short_description: "Audit and repair spec, plan, and task artifacts."
+  default_prompt: "Repair the current feature spec artifacts so they are ready for the next workflow phase."

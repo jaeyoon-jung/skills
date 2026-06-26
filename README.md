@@ -10,6 +10,7 @@ A collection of reusable agent skills for [Claude Code](https://code.claude.com/
 - **[project-charter](project-charter/SKILL.md)** — Draft or update `constitution.md` (≤1000 words) and `tech-stack.md` with iterative clarifying questions.
 - **[roadmap](roadmap/SKILL.md)** — Draft or maintain a forward-looking `ROADMAP.md`.
 - **[ship](ship/SKILL.md)** — Commit current working changes and open a GitHub PR.
+- **[spec-repair](spec-repair/SKILL.md)** — Audit and repair spec, plan, and task artifacts before phase handoff.
 - **[specify](specify/SKILL.md)** — Turn a feature into approved specification, plan, and task artifacts.
 - **[triage](triage/SKILL.md)** — File GitHub issues for unresolved code review findings.
 
@@ -22,7 +23,7 @@ Keep this repository as the source of truth and symlink any skill into one or bo
 ```sh
 repo_root="$(git rev-parse --show-toplevel)"
 mkdir -p "$HOME/.claude/skills"
-for skill in changelog implement next-feature project-charter roadmap ship specify triage; do
+for skill in changelog implement next-feature project-charter roadmap ship spec-repair specify triage; do
   target="$HOME/.claude/skills/$skill"
   if [ ! -e "$target" ] && [ ! -L "$target" ]; then
     ln -s "$repo_root/$skill" "$target"
@@ -37,7 +38,7 @@ Invoke explicitly with `/changelog`, `/ship`, `/specify`, and so on. Claude Code
 ```sh
 repo_root="$(git rev-parse --show-toplevel)"
 mkdir -p "$HOME/.agents/skills"
-for skill in changelog implement next-feature project-charter roadmap ship specify triage; do
+for skill in changelog implement next-feature project-charter roadmap ship spec-repair specify triage; do
   target="$HOME/.agents/skills/$skill"
   if [ ! -e "$target" ] && [ ! -L "$target" ]; then
     ln -s "$repo_root/$skill" "$target"

@@ -7,6 +7,8 @@ description: Take a single feature, typically a roadmap item, through three gate
 
 Take a single feature through three human-gated phases. Output is three reviewable files under `specs/<feature-slug>/`, one per phase. **This skill stops at `tasks.md`.** Execution is a separate skill.
 
+> **Recommended model:** Run Specify, Plan, and Tasks with **Opus (high reasoning effort)** — spec/plan/tasks work is reasoning-heavy and the artifacts are load-bearing for everything downstream. For an especially complex or ambiguous feature, use **Fable 5 (high)** instead. Switch with `/model` before starting. (The separate `implement` skill drops to a cheaper tier — see that skill.)
+
 The whole point is to refuse the failure mode of "I'll just start building" — surface assumptions, scope, dependencies, and trust gates *before* any code is written. A 15-minute spec prevents hours of rework.
 
 ```

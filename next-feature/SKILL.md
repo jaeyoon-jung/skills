@@ -19,6 +19,8 @@ cut branch ──→ specify ──→ implement ──→ ship ──→ stop (
 
 The skill ends with an open PR, including the changelog entry written during implementation. Merging, code review, and post-merge roadmap refresh are out of scope.
 
+> **Recommended model per phase:** Author the spec/plan/tasks (`specify`) on **Opus (high)**, then switch to **Sonnet 5 (medium)** for `implement` and `ship`. For an especially complex or ambiguous feature, use **Fable 5 (high)** for both phases instead. Prompt the user to switch with `/model` at each phase boundary (before step 4, and again before step 5) rather than assuming the switch happened.
+
 ---
 
 ## 1. Preconditions — fail fast if any are missing
@@ -66,6 +68,8 @@ Confirm the branch name with the user before creating it if the slug is ambiguou
 
 ## 4. Run the specify skill
 
+Prompt the user to switch to **Opus (high)** — or **Fable 5 (high)** if this feature is especially complex or ambiguous — before starting; spec/plan/tasks work is reasoning-heavy.
+
 Load and follow the `specify` skill with the chosen roadmap item as input. Prefer the host's native skill invocation; otherwise read the sibling `../specify/SKILL.md` completely. Wait for it to complete.
 
 The `specify` skill has its own three-phase gates (Specify → Plan → Tasks); don't bypass them. If the user redirects mid-spec (re-scopes, splits, abandons), surface back to the user before continuing — the pipeline may need to restart from step 2 with a different item.
@@ -79,6 +83,8 @@ Also confirm:
 - `specs/.current` points to `specs/<feature-slug>` with `phase=tasks`.
 
 ## 5. Run the implement skill
+
+Prompt the user to switch to **Sonnet 5 (medium)** before starting — the `tasks.md` contract has absorbed the hard reasoning, so execution runs cheaper there. Keep **Fable 5 (high)** if the feature is especially complex.
 
 Load and follow the `implement` skill against the produced `tasks.md`. Prefer the host's native skill invocation; otherwise read the sibling `../implement/SKILL.md` completely. Wait for it to complete.
 

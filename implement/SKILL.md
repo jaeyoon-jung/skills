@@ -9,6 +9,8 @@ Pair with the `specify` skill. Treat the approved `tasks.md` as the implementati
 
 Prefer starting implementation from a fresh artifact handoff: `specs/.current`, the chosen `tasks.md`, the project agent guide, and only the `spec.md` / `plan.md` sections referenced by the current task. Do not rely on prior specification chat as implementation context. If prior chat conflicts with approved artifacts, the artifacts win unless the user gives a newer explicit instruction.
 
+> **Recommended model:** Run implementation with **Sonnet 5 (medium reasoning effort)** — the `tasks.md` contract has already absorbed the hard reasoning, so execution is cheaper and faster on Sonnet. For an especially complex feature (subtle concurrency, tricky migrations, dense cross-layer changes), step up to **Fable 5 (high)**. Switch with `/model` before starting. (Spec/plan/tasks are authored on Opus high — see the `specify` skill.)
+
 **The whole point: refuse the failure mode of "implement everything, test at the end."** Each slice leaves the system green and committed. A bug in slice 1 doesn't ripple into slices 2–5.
 
 ```

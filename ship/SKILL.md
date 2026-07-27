@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Commit current working changes and open a GitHub pull request, creating a feature branch from the default branch first when needed. Use when the user says "ship", "ship this", "open a PR", "make a PR", or otherwise signals that current work is ready for review. Do not use while the user is mid-implementation or has asked not to commit.
+description: Commit current working changes, open a GitHub pull request, request a cross-agent review, and watch the PR for review comments and CI failures. Creates a feature branch from the default branch first when needed. Use when the user says "ship", "ship this", "open a PR", "make a PR", or otherwise signals that current work is ready for review. Do not use while the user is mid-implementation or has asked not to commit.
 ---
 
 # Commit current work and open a pull request
@@ -55,6 +55,41 @@ Use `gh pr create`. Title under 70 chars, focused on the why. Body in a HEREDOC 
 
 Do not add tool- or vendor-specific attribution unless the user or repository explicitly requires it. Return the PR URL.
 
+## 6. Request a cross-agent review
+
+Check which agent co-authored the commits on the branch:
+
+```
+git log --format='%an <%ae>%n%(trailers:key=Co-authored-by,valueonly)' origin/<default-branch>..HEAD
+```
+
+Then comment on the PR (`gh pr comment <url> --body '<comment>'`, or the GitHub MCP `add_issue_comment` tool):
+
+| Co-author found | Comment to post |
+| --- | --- |
+| Claude (`noreply@anthropic.com`, `Claude`, `claude[bot]`) | `@codex review` |
+| Codex (`codex@openai.com`, `Codex`, `chatgpt-codex-connector[bot]`) | `@claude review` |
+| Both | Post both comments — one per agent, each asking the *other* one to review. |
+| Neither | Skip this step; do not guess. |
+
+The point is cross-review: never ask an agent to review its own work.
+
+## 7. Watch the PR
+
+Subscribe the session to the PR's activity so review comments and CI failures wake it up:
+
+- Call `subscribe_pr_activity` with the PR's owner, repo, and number.
+- If that tool isn't available in the session, tell the user the PR won't be monitored automatically, and stop — do **not** poll with `sleep` or repeated status checks.
+
+Once subscribed, end the turn. Incoming events arrive on their own; handle them as they come:
+
+- **CI failure** — diagnose, push a fix to the same branch, and repeat until green. If a failure is real but outside the scope the user asked for, reply on the PR saying what's failing and why you're not fixing it.
+- **Review comment** — address it with a commit, or reply explaining why not. Ignore echoes of your own comments and duplicates of events you already handled.
+- **Merge conflict** — merge (or rebase onto) the base branch, resolve, push. Only ask the user when both sides changed the same logic and picking one loses behavior.
+- **Ambiguous or architecturally significant** — ask the user before acting.
+
+Stay subscribed until the PR is merged or closed, or the user says stop — then call `unsubscribe_pr_activity`.
+
 ## Refuse to
 
 - Force-push to `main`/`master`/`trunk`.
@@ -62,3 +97,5 @@ Do not add tool- or vendor-specific attribution unless the user or repository ex
 - Modify `git config`.
 - Skip hooks (`--no-verify`, `--no-gpg-sign`).
 - Open a PR if there's no GitHub remote — tell the user to add one or push elsewhere.
+- Ask an agent to review a PR it co-authored.
+- Poll for PR events with `sleep` or repeated status checks instead of subscribing.

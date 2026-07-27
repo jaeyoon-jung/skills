@@ -9,7 +9,7 @@ A collection of reusable agent skills for [Claude Code](https://code.claude.com/
 - **[next-feature](next-feature/SKILL.md)** — Run the next roadmap item through specification, implementation, and shipping.
 - **[project-charter](project-charter/SKILL.md)** — Draft or update `constitution.md` (≤1000 words) and `tech-stack.md` with iterative clarifying questions.
 - **[roadmap](roadmap/SKILL.md)** — Draft or maintain a forward-looking `ROADMAP.md`.
-- **[ship](ship/SKILL.md)** — Commit current working changes and open a GitHub PR.
+- **[ship](ship/SKILL.md)** — Commit current working changes, open a GitHub PR, request a cross-agent review, and watch the PR.
 - **[spec-repair](spec-repair/SKILL.md)** — Audit and repair spec, plan, and task artifacts before phase handoff.
 - **[specify](specify/SKILL.md)** — Turn a feature into approved specification, plan, and task artifacts.
 - **[triage](triage/SKILL.md)** — File GitHub issues for unresolved code review findings.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-07-27
+
+- Made ship request a cross-agent review, tagging Codex on Claude-authored PRs and vice versa.
+- Made ship subscribe to PR activity so review comments and CI failures are handled as they arrive.
+
 ## 2026-06-26
 
 - Added spec artifact repair to audit and fix spec, plan, and task handoffs.

@@ -69,10 +69,10 @@ Then comment on the PR (`gh pr comment <url> --body '<comment>'`, or the GitHub 
 | --- | --- |
 | Claude (`noreply@anthropic.com`, `Claude`, `claude[bot]`) | `@codex review` |
 | Codex (`codex@openai.com`, `Codex`, `chatgpt-codex-connector[bot]`) | `@claude review` |
-| Both | Post both comments — one per agent, each asking the *other* one to review. |
+| Both | No agent is disinterested. Post no review request; tell the user both agents contributed and ask whether they want a human reviewer or an agent review anyway. |
 | Neither | Skip this step; do not guess. |
 
-The point is cross-review: never ask an agent to review its own work.
+The point is cross-review: never ask an agent to review its own work — including when it co-authored only part of the branch.
 
 ## 7. Watch the PR
 
